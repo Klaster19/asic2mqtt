@@ -66,16 +66,21 @@ def setup_logging(config_logging, verbose_level=0):
 # Загрузка конфигурации
 def load_config(logger):
     """Загрузка конфигурации из файла"""
+    # Определяем путь к конфигурационному файлу
+    # Если задана переменная окружения CONFIG_PATH, используем её
+    # Иначе используем config_secrets.json в текущей директории
+    config_path = os.environ.get('CONFIG_PATH', 'config_secrets.json')
+    
     try:
-        with open('config_secrets.json', 'r') as f:
+        with open(config_path, 'r') as f:
             config = json.load(f)
-        logger.debug("Конфигурация загружена успешно")
+        logger.debug(f"Конфигурация загружена успешно из {config_path}")
         return config
     except FileNotFoundError:
-        logger.error("Файл config_secrets.json не найден. Пожалуйста, создайте его на основе config_example.json")
+        logger.error(f"Файл {config_path} не найден. Пожалуйста, создайте его на основе config_example.json")
         exit(1)
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка в формате config_secrets.json. Проверьте файл конфигурации: {e}")
+        logger.error(f"Ошибка в формате {config_path}. Проверьте файл конфигурации: {e}")
         exit(1)
 
 # Функция для проверки доступности хоста

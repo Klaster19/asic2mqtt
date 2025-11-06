@@ -1,0 +1,19 @@
+[Unit]
+Description=ASIC to MQTT Bridge
+After=network.target
+
+[Service]
+Type=simple
+User=asic2mqtt
+Group=asic2mqtt
+ExecStart=/usr/local/bin/asic2mqtt
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Конфигурационный файл должен находиться в /etc/asic2mqtt/config.json
+Environment=CONFIG_PATH=/etc/asic2mqtt/config.json
+
+[Install]
+WantedBy=multi-user.target
