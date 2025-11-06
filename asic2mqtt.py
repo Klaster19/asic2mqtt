@@ -153,7 +153,7 @@ def main():
     args = parser.parse_args()
     
     # Загрузка конфигурации
-    config = load_config(logging.getLogger('asic2mqtt') if logging.getLogger('asic2mqtt').handlers else None)
+    config = load_config(logging.getLogger('asic2mqtt'))
     
     # Получение конфигурации логгирования
     config_logging = config.get('logging', {})
