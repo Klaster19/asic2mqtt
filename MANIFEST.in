@@ -1,0 +1,7 @@
+include README.md
+include LICENSE
+include requirements.txt
+include config_example.json
+include gitignore.new
+global-exclude *.pyc
+global-exclude __pycache__

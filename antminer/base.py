@@ -42,7 +42,7 @@ class Core(object):
         if len(cmd) == 2:
             payload['parameter'] = cmd[1]
 
-        self.conn.send(json.dumps(payload))
+        self.conn.send(json.dumps(payload).encode('utf-8'))
         payload = self.read_response()
         try:
             response = json.loads(payload)
@@ -53,16 +53,16 @@ class Core(object):
         return response
 
     def read_response(self):
-	done = False
-	buf = self.conn.recv(4096)
-	while done is False:
-            more = self.conn.recv(4096)
-            if not more:
-                done = True
-            else:
-                buf += more
+       done = False
+       buf = self.conn.recv(4096).decode('utf-8')
+       while done is False:
+           more = self.conn.recv(4096).decode('utf-8')
+           if not more:
+               done = True
+           else:
+               buf += more
 
-        return buf.replace('\x00','')
+       return buf.replace('\x00','')
 
     def command(self, *args):
         """
@@ -105,6 +105,10 @@ class BaseClient(Core):
         requires us to do some light JSON correction before we load the response.
         """
         response = self.send_command('stats')
+        # Если response уже является словарем, возвращаем его как есть
+        if isinstance(response, dict):
+            return response
+        # Если response - строка, обрабатываем ее как раньше
         return json.loads(response.replace('"}{"', '"},{"'))
 
     def version(self):
@@ -137,7 +141,7 @@ class BaseClient(Core):
             version['miner']['vendor'] = MINER_BMMINER
             version['miner']['version'] = parse_version_number(resp['VERSION'][0][MINER_BMMINER])
         else:
-            version['miner']['vendor'] = MINER_UNKNWON
+            version['miner']['vendor'] = MINER_UNKNOWN
             version['miner']['version'] = None
 
         return version

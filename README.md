@@ -1,29 +1,139 @@
-# python-antminer
+# ASIC2MQTT
 
-A Pythonic interface to the Antminer API.
+Универсальный проект для подключения к API асиков Antminer и Whatsminer с получением статистики и отправкой данных в MQTT.
 
-# Examples
+## Установка
 
-## Get Version Information
+### Установка через pip (рекомендуется)
 
-Connect to a miner and get version information. Where appropriate, an instance of [`semantic_version.Version`](https://pypi.python.org/pypi/semantic_version/) is returned.
-
-```python
-from antminer.base import BaseClient
-
-client = BaseClient('192.168.0.25') # Change to IP address of your miner.
-client.connect()
-print client.version()
+```bash
+pip install asic2mqtt
 ```
 
-## Discover Miners on the LAN
+### Установка из исходного кода
 
-The `LocalMiners` class is an iterator that looks for miners on the LAN. A `BaseClient` is returned for each miner discovered.
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/Klaster19/asic2mqtt.git
+   cd asic2mqtt
+   ```
 
-```python
-from antminer.discover import LocalMiners
+2. Установите зависимости:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-network = LocalMiners()
-for miner in network:
-    print miner.version()
+3. Скопируйте `config_example.json` в `config_secrets.json` и настройте учетные данные:
+   ```bash
+   cp config_example.json config_secrets.json
+   ```
+
+4. Отредактируйте `config_secrets.json`, указав правильные IP-адреса асиков и учетные данные MQTT.
+
+**ВАЖНО**: Файл `config_secrets.json` содержит конфиденциальные данные и должен быть добавлен в .gitignore для предотвращения попадания в репозиторий.
+
+Параметры логгирования в конфигурационном файле:
+- `level` - уровень логгирования (DEBUG, INFO, WARNING, ERROR)
+- `file` - путь к файлу логов (по умолчанию /var/log/asic2mqtt.log)
+
+## Использование
+
+После установки вы можете запустить asic2mqtt следующим образом:
+
+```bash
+asic2mqtt
 ```
+
+Или, если вы установили из исходного кода:
+
+```bash
+python3 asic2mqtt.py
+```
+
+По умолчанию скрипт записывает только ошибки в консоль и все логи в файл `/var/log/asic2mqtt.log`.
+Уровень логгирования в консоли можно настроить в конфигурационном файле (параметр `logging.level`) или с помощью параметров командной строки:
+
+- без параметров - вывод только ошибок (уровень ERROR)
+- `-v` - вывод предупреждений и ошибок (уровень WARNING)
+- `-vv` - вывод информационных сообщений, предупреждений и ошибок (уровень INFO)
+- `-vvv` - вывод всех сообщений (уровень DEBUG)
+
+Параметры командной строки имеют приоритет над настройками в конфигурационном файле.
+
+Примеры:
+```bash
+asic2mqtt         # Только ошибки в консоль (по умолчанию)
+asic2mqtt -v      # Предупреждения и ошибки
+asic2mqtt -vv     # Информационные сообщения и выше
+asic2mqtt -vvv    # Все сообщения (для отладки)
+```
+
+## Использование (альтернативный способ)
+
+Запустите скрипт для сбора статистики:
+```
+python3 asic2mqtt.py
+```
+
+По умолчанию скрипт записывает только ошибки в консоль и все логи в файл `/var/log/asic2mqtt.log`.
+Уровень логгирования в консоли можно настроить в конфигурационном файле (параметр `logging.level`) или с помощью параметров командной строки:
+
+- без параметров - вывод только ошибок (уровень ERROR)
+- `-v` - вывод предупреждений и ошибок (уровень WARNING)
+- `-vv` - вывод информационных сообщений, предупреждений и ошибок (уровень INFO)
+- `-vvv` - вывод всех сообщений (уровень DEBUG)
+
+Параметры командной строки имеют приоритет над настройками в конфигурационном файле.
+
+Примеры:
+```
+python3 asic2mqtt.py         # Только ошибки в консоль (по умолчанию)
+python3 asic2mqtt.py -v      # Предупреждения и ошибки
+python3 asic2mqtt.py -vv     # Информационные сообщения и выше
+python3 asic2mqtt.py -vvv    # Все сообщения (для отладки)
+```
+
+## Тестирование конфигурации
+
+Перед запуском основного скрипта можно проверить корректность конфигурации:
+```
+python3 test_config.py
+```
+
+## Тестирование функциональности
+
+Для тестирования функциональности asic2mqtt.py без подключения к реальным устройствам:
+```
+python3 test_asic2mqtt.py
+```
+
+## Тестирование подключения к асикам
+
+Для тестирования подключения к асику Antminer используйте:
+```
+python3 test_miner.py
+```
+
+Для расширенного тестирования:
+```
+python3 test_miner_extended.py
+```
+
+Для подробного тестирования:
+```
+python3 test_miner_detailed.py
+```
+
+## Структура проекта
+
+- `asic2mqtt.py` - основной скрипт для сбора статистики с асиков Whatsminer и Antminer с отправкой в MQTT
+- `antminer/` - пакет для работы с асиками Antminer
+- `config_secrets.json` - конфигурационный файл с учетными данными (не должен быть в репозитории)
+- `config_example.json` - пример конфигурационного файла
+- `test_config.py` - скрипт для проверки конфигурации
+- `test_miner*.py` - тестовые скрипты для проверки подключения к асикам
+- `test_asic2mqtt.py` - тестовый скрипт для проверки функциональности asic2mqtt.py
+- `setup.py` - файл настройки для установки пакета
+- `pyproject.toml` - современный файл конфигурации проекта
+- `MANIFEST.in` - файл для включения дополнительных файлов в дистрибутив пакета
+- `CHANGELOG.md` - история изменений проекта

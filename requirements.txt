@@ -1,0 +1,3 @@
+whatsminer
+paho-mqtt
+semantic_version

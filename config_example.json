@@ -1,0 +1,28 @@
+{
+  "asics": {
+    "whatsminer1": {
+      "ip": "192.168.3.34",
+      "topic": "miner/worker1_m31s"
+    },
+    "whatsminer2": {
+      "ip": "192.168.3.36",
+      "topic": "miner/worker2_m50"
+    },
+    "antminer3": {
+      "ip": "192.168.3.73",
+      "topic": "miner/worker_t21_002",
+      "username": "root",
+      "password": "root"
+    }
+  },
+  "mqtt": {
+    "broker_address": "192.168.3.27",
+    "broker_port": 1883,
+    "username": "your_mqtt_username",
+    "password": "your_mqtt_password"
+  },
+  "logging": {
+    "level": "ERROR",
+    "file": "/var/log/asic2mqtt.log"
+  }
+}

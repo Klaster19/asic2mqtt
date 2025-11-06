@@ -10,7 +10,7 @@ DEFAULT_PORT = 4028
 
 MINER_CGMINER = 'CGMiner'
 MINER_BMMINER = 'BMMiner'
-MINER_UNKNWON = 'UNKNOWN'
+MINER_UNKNOWN = 'UNKNOWN'
 
 # A map of response codes to reasonably sane 
 # response messages.
